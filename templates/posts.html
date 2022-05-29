@@ -1,37 +1,29 @@
 {% extends 'base.html' %}
 
-{% block head %} 
+{% block head %}
 <title>Posts</title>
 {% endblock %}
 
-{% block body %} 
+{% block body %}
+<br>
 <h1>All Posts</h1>
 
-    <hr>
-    <h2>Create New Blog Post: </h2>
-    <form action="/posts" method="POST">
-        Title: <input type="text" name="title" id="title">
-        <br>
-        Author: <input type="text" name="author" id="author">
-        <br>
-        Post: <input type="text" name="content" id="content">
-        <br>
-        <input type="submit" value="Post">
-    </form>
-    <hr>
+{% for post in posts %}
+<br>
+<h2>{{ post.title }}</h2>
 
-    {% for post in posts %}
-        <h2>{{ post.title }}</h2>
+{% if post.author %}
+<small>Written by {{ post.author }} on {{post.date_posted}}</small>
+{% else %}
+<small>Written by anonymous on {{post.date_posted}}</small>
+{% endif %}
+<br>
+<br>
 
-        {% if post.author %}
-            <h3>By: {{ post.author }}</h3>
-        {% else %}
-            <h3>By: Anonymous</h3>
-        {% endif %}
-
-        <p> {{ post.content }} </p>
-        <a href="/posts/delete/{{post.id}}">Delete</a>
-        <a href="/posts/edit/{{post.id}}">Edit</a>
-        <hr>
-    {% endfor %}
+<p style="white-space:pre-wrap"> {{ post.content }} </p>
+<a class="btn btn-danger" href="/posts/delete/{{post.id}}">Delete</a>
+<a class="btn btn-primary" href="/posts/edit/{{post.id}}">Edit</a>
+<br>
+<hr>
+{% endfor %}
 {% endblock %}
