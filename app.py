@@ -43,7 +43,6 @@ def delete(id):
 
 @app.route('/posts/edit/<int:id>', methods=['GET', 'POST'])
 def edit(id):
-
     post = BlogPost.query.get_or_404(id)
     if request.method == 'POST':
         post.title = request.form['title']
