@@ -6,7 +6,12 @@
 
 {% block body %}
 <br>
-<h1>All Posts</h1>
+<div>
+    <h1 style="display:inline">All Posts</h1>
+    <a style="display:inline" class="btn btn-success float-end" href="/posts/new">+ New Post</a>
+</div>
+
+<hr>
 
 {% for post in posts %}
 <br>
