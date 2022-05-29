@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
@@ -16,33 +16,25 @@ class BlogPost(db.Model):
     def __repr__(self):
         return 'Blog post ' + str(self.id)
 
-all_posts = [
-    {
-        'title': 'Post 1',
-        'content': 'This is the content of post 1. Lalalala.',
-        'author': 'Asghar Ali'
-    },
-    {
-        'title': 'Post 1',
-        'content': 'This is the content of post 1. Lalalala.',
-    }
-]
+all_posts = []
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
-@app.route('/posts')
+@app.route('/posts', methods=['GET', 'POST'])
 def posts():
-    return render_template('posts.html', posts=all_posts)
 
-@app.route('/home/users/<string:name>/posts/<int:id>')
-def hello(id):
-    return "Hello, " + name + ", your id is: " + str(id)
-
-@app.route('/onlyget', methods=['GET'])
-def get_req():
-    return "You can only get this webpage"
+    if request.method == 'POST':
+        post_title = request.form['title']
+        post_content = request.form['content']
+        new_post = BlogPost(title=post_title, content=post_content, author='Mowlana')
+        db.session.add(new_post)
+        db.session.commit()
+        return redirect('/posts')
+    else:
+        all_posts = BlogPost.query.order_by(BlogPost.date_posted).all()
+        return render_template('posts.html', posts=all_posts)
 
 if __name__ == "__main__":
     app.run(debug=True)
